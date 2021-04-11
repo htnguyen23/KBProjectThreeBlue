@@ -29,7 +29,6 @@ public class Park implements ParkInterface{
     
     /**
      * name getter
-     * @return name of the Park
      */
 	@Override
 	public String getName() {
@@ -38,7 +37,6 @@ public class Park implements ParkInterface{
 
 	/**
 	 * states getter
-	 * @return states of the Park
 	 */
 	@Override
 	public String getStates() {
@@ -57,7 +55,6 @@ public class Park implements ParkInterface{
 
 	/**
 	 * description getter
-	 * @return description of the Park
 	 */
 	@Override
 	public String getDescription() {
