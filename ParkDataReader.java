@@ -1,3 +1,12 @@
+// --== CS400 File Header Information ==--
+// Name: Xiaohan Zhu
+// Email: xzhu274@wisc.edu
+// Team: KB blue
+// Role: data wrangler
+// TA: Keren
+// Lecturer: Gary Dahl
+// Notes to Grader: <optional extra notes>
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -7,15 +16,21 @@ import java.util.List;
 import java.util.zip.DataFormatException;
 
 
-
-
-
 public class ParkDataReader {
 	
 	
 	Hashtable<String, Park> parkTable;
 	
-	
+	/**
+	 * This method reads in the file containing park information including name,
+	 * description, and state. It creates Park objects and stores parks in
+	 * a hash table.
+	 * 
+	 * @param inputFileReader input data file containing park information
+	 * @return a hash table containing all Park objects with String name as key
+	 * @throws IOException when there is I/O problems with input data file 
+	 * @throws DataFormatException when the number of columns do not match.
+	 */
 	public Hashtable<String, Park> readParkData(Reader inputFileReader) throws IOException, DataFormatException {
 		if (inputFileReader == null) {
 			throw new NullPointerException("File is null");
@@ -38,7 +53,7 @@ public class ParkDataReader {
 		while (line!= null) {
 //			String[] data = line.split(",");
 			String[] data = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-			parkTable.put(data[0], new Park(data));  
+			parkTable.put(data[0], new Park(data));  //add park to the hash table
 			line = buffRead.readLine(); 
 		}
 		buffRead.close();
@@ -50,6 +65,17 @@ public class ParkDataReader {
 	
 
 	CS400Graph<Park> parkGraph;
+	
+	/**
+	 * This method reads in the data file containing adjacency matrix and creates
+	 * the graph by inserting vertices(storing Park object) and edges between 
+	 * them accordingly.
+	 * 
+	 * @param inputFileReader input data file containing adjacency matrix
+	 * @return graph class according to the adjacency matrix
+	 * @throws IOException when there is I/O problems with input data file
+	 * @throws DataFormatException when the number of columns do not match.
+	 */
 	public CS400Graph<Park> readGraphData(Reader inputFileReader) throws IOException, DataFormatException{
 		if (inputFileReader == null) {
 			throw new NullPointerException("File is null");
