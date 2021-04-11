@@ -1,50 +1,64 @@
 import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.LinkedList;
+import java.util.zip.DataFormatException;
 import java.lang.Math;
-import CS400Graph.Path;
-import CS400Graph.Vertex;
-import CS400Graph.Edge;
-import CS400Graph.*;
 
 public class Backend implements BackendInterface
 { 
-  private ParkDataReaderDummy reader; 
+  private final int NUMBER_OF_PARKS = 52;
+  private ParkDataReader reader; 
   private FileReader filereader;
   private LinkedList<ParkDummy> parkList;
-  private LinkedList<Vertex> vertexList;
-  private CS400Graph graph;
-  private ParkDummy madison;
+  private ArrayList<String> tableKeys;
+  private CS400Graph<Park> graph;
+  private Hashtable<String, Park> table;
+  private Park madison;
   
-  public Backend(String filename)
+  public Backend(String filename) throws IOException, DataFormatException
   {
-    this.filereader = new FileReader(filename);
-    this.reader = new ParkDataReaderDummy(filereader);
-    parkList = reader.readDataSetList(filereader);
-    graph.vertices = reader.readDataSet(filereader);
-      
-    madison = parkList.get(0);
-    
-    for(int i = 0; i < parkList.size(); i++)
+    try
     {
-      graph.insertVertex(parkList.get(i));
-      for(int j = 0; j < parkList.get(i).getNeighbors().size(); j++)
-      {
-        graph.insertEdge(parkList.get(i), parkList.get(i).getNeighbors().get(j), parkList.get(i).getNeighborWeights().get(j));
-      }
-    } //populates graph with both vertices and edges
+      this.filereader = new FileReader(filename);
+      this.reader = new ParkDataReader();
+      reader.readGraphData(filereader);
+      graph = reader.parkGraph;
+      reader.readParkData(filereader);
+      table = reader.parkTable;
+    }
+    catch(IOException e)
+    {
+      throw new IOException("There is an input/output problem with the input data file.");
+    }
+    catch(DataFormatException e)
+    {
+      throw new DataFormatException("The data format of the input file is incompatible.");
+    }
+    tableKeys = new ArrayList<String>(table.keySet());
+    madison = table.get("Madison (City)");
+    
+    //for(int i = 0; i < parkList.size(); i++)
+    //{
+    //  graph.insertVertex(parkList.get(i));
+    //  for(int j = 0; j < parkList.get(i).getNeighbors().size(); j++)
+    //  {
+    //    graph.insertEdge(parkList.get(i), parkList.get(i).getNeighbors().get(j), parkList.get(i).getNeighborWeights().get(j));
+    //  }
+    //} //populates graph with both vertices and edges
   }
   
-  public Path returnPathTo(ParkDummy destination) 
+  public CS400Graph<Park>.Path returnPathTo(Park destination) 
   {
     
-    Path returnPath = CS400Graph.dijkstrasShortestPath(madison, destination);
+    CS400Graph<Park>.Path returnPath = graph.dijkstrasShortestPath(madison, destination);
     return returnPath;
   }
 
-  public Path fromTo(ParkDummy departure, ParkDummy destination)
+  public CS400Graph<Park>.Path fromTo(Park departure, Park destination)
   {
-    Path returnPath = CS400Graph.dijkstrasShortestPath(departure, destination);
+    CS400Graph<Park>.Path returnPath = graph.dijkstrasShortestPath(departure, destination);
     return returnPath;
   }
 
@@ -60,22 +74,23 @@ public class Backend implements BackendInterface
     return false;
   }
 
-  public LinkedList<ParkDummy> findParks(String searchQuery)
+  public LinkedList<Park> findParks(String searchQuery)
   {
-    LinkedList<ParkDummy> returnList = new LinkedList<ParkDummy>();
-    for(int i = 0; i < parkList.size(); i++)
+    LinkedList<Park> returnList = new LinkedList<Park>();
+    for(int i = 0; i < tableKeys.size(); i++)
     {
-      if(parkList.get(i).getName().contains(searchQuery))
+      if(tableKeys.get(i).contains(searchQuery))
       {
-        returnList.add(parkList.get(i));
+        returnList.add(table.get(tableKeys.get(i)));
       }
     }
     return returnList;
   }
 
-  public ParkDummy randomPark() 
+  public Park randomPark() 
   {
-    int index = (int)Math.floor(Math.random() * parkList.size());
-    return parkList.get(index);
+    int index = (int)Math.floor(Math.random() * tableKeys.size());
+    String key = tableKeys.get(index);
+    return table.get(key);
   }
 }
