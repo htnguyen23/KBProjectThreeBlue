@@ -10,23 +10,29 @@ public class Backend implements BackendInterface
 { 
   private final int NUMBER_OF_PARKS = 52;
   private ParkDataReader reader; 
+  private ParkDataReader reader2;
   private FileReader filereader;
+  private FileReader filereader2;
   private LinkedList<ParkDummy> parkList;
   private ArrayList<String> tableKeys;
   private CS400Graph<Park> graph;
   private Hashtable<String, Park> table;
   private Park madison;
   
-  public Backend(String filename) throws IOException, DataFormatException
+  public Backend(String parkDataFile, String graphDataFile) throws IOException, DataFormatException
   {
     try
     {
-      this.filereader = new FileReader(filename);
+      this.filereader = new FileReader(parkDataFile);
       this.reader = new ParkDataReader();
-      reader.readGraphData(filereader);
-      graph = reader.parkGraph;
       reader.readParkData(filereader);
+      
+      this.filereader2 = new FileReader(graphDataFile);
+      this.reader2 = new ParkDataReader();
+      reader2.readGraphData(filereader2);
+      
       table = reader.parkTable;
+      graph = reader2.parkGraph;
     }
     catch(IOException e)
     {
