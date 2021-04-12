@@ -25,8 +25,25 @@ public class Backend implements BackendInterface {
 	private Hashtable<String, Park> table;
 	private Park madison;
 
-	public Backend(String parkDataFile, String graphDataFile) throws IOException, DataFormatException {
-		try {
+	
+	/**
+	 * The constructor for the Backend. It takes in two arguments representing the names of the csv
+	 * files. After it has these, it creates readParkData objects to extract the data of the csv
+	 * files using the datawrangler's methods. 
+	 * @param parkDataFile, String representing the name of the file, but furthermore this file is
+	 * used to create all the park objects and populate the hashtable using datawrangler's methods
+	 * @param graphDataFile, String representing the name of the file, but furthermore this file is
+	 * used to create the actual graph and populate it with the Park objects already created using
+	 * the datawrangler's methods
+	 * @throws IOException, this is thrown when the datawrangler's methods can't read the formatting
+	 * in the file
+	 * @throws DataFormatException, this is thrown when the datawrangler's methods can't read the
+	 * given file type
+	 */
+	public Backend(String parkDataFile, String graphDataFile) throws IOException, DataFormatException 
+	{
+		try
+		{
 			this.filereader = new FileReader(parkDataFile);
 			this.reader = new ParkDataReader();
 			reader.readParkData(filereader);
@@ -39,9 +56,13 @@ public class Backend implements BackendInterface {
 			// the parkGraph and vice versa
 			table = reader.parkTable;
 			graph = reader.parkGraph;
-		} catch (IOException e) {
+		} 
+		catch (IOException e) 
+		{
 			throw new IOException("There is an input/output problem with the input data file.");
-		} catch (DataFormatException e) {
+		} 
+		catch (DataFormatException e) 
+		{
 			throw new DataFormatException("The data format of the input file is incompatible.");
 		}
 		tableKeys = new ArrayList<String>(table.keySet());
@@ -49,36 +70,72 @@ public class Backend implements BackendInterface {
 
 	}
 
-	public CS400Graph<Park>.Path returnPathTo(Park destination) {
-
+	/**
+	 * returnPathTo finds the most efficient route to a given park using dijkstras algorithm.
+	 * The assumed departure for this method is ALWAYS madison, the origin point of our
+	 * travel agency
+	 * @param destination, a Park object to find the route to
+	 * @return CS400Graph<Park>.Path, a Path object representing the most efficient route to the
+	 * given destination
+	 */
+	public CS400Graph<Park>.Path returnPathTo(Park destination) 
+	{
 		CS400Graph<Park>.Path returnPath = graph.dijkstrasShortestPath(madison, destination);
 		return returnPath;
 	}
 
-	public CS400Graph<Park>.Path fromTo(Park departure, Park destination) {
+	/**
+	 * fromTo is similar to returnPathTo, except it can take any two parks as input to calculate the
+	 * most efficient route between them.
+	 * @param departure, Park representing the starting point
+	 * @param destination, Park representing the ending point
+	 * @return CS400Graph<Park>.Path, a Path object represenging the most efficient route between
+	 * the given parks
+	 */
+	public CS400Graph<Park>.Path fromTo(Park departure, Park destination) 
+	{
 		CS400Graph<Park>.Path returnPath = graph.dijkstrasShortestPath(departure, destination);
 		return returnPath;
 	}
 
-	public boolean doesParkExist(String searchQuery) {
-		for (int i = 0; i < parkList.size(); i++) {
-			if (parkList.get(i).getName().equals(searchQuery)) {
+	/**
+	 * doesParkExist searches through the Hashtable to see if a park with the given key exists
+	 * @param searchQuery, a String the user inputs to search the hashtable for
+	 * @return boolean, true if the park exists and false if it does not
+	 */
+	public boolean doesParkExist(String searchQuery) 
+	{
+		for (int i = 0; i < parkList.size(); i++) 
+		{
+			if (parkList.get(i).getName().equals(searchQuery)) 
+			{
 				return true;
 			}
 		}
 		return false;
 	}
 
-	// IM: chnaged findParks() method
-	public Park[] findParks() {
+	// IM: changed findParks() method
+	/**
+	 * findParks returns all the Parks in the hashtable
+	 * @return Park[] representing all the parks in the hashtable
+	 */
+	public Park[] findParks() 
+	{
 		Park[] returnList = new Park[NUMBER_OF_PARKS];
-		for (int i = 0; i < tableKeys.size(); i++) {
+		for (int i = 0; i < tableKeys.size(); i++) 
+		{
 			returnList[i] = (table.get(tableKeys.get(i)));
 		}
 		return returnList;
 	}
 
-	public Park randomPark() {
+	/**
+	 * randomPark finds a random park within the hashtable and returns it
+	 * @return Park representing the random park that was found
+	 */
+	public Park randomPark() 
+	{
 		int index = (int) Math.floor(Math.random() * tableKeys.size());
 		String key = tableKeys.get(index);
 		return table.get(key);
