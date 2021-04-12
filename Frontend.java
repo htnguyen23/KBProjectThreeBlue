@@ -1,5 +1,6 @@
-import java.util.ArrayList;
 import java.util.Scanner;
+
+//import CS400Graph.Path;
 
 public class Frontend {
 	
@@ -80,12 +81,26 @@ public class Frontend {
 	public void parkMode() {
 		String in = "";
 		// CHANGE TO METHOD FROM BACKEND
-		Park[] list = backend.getListOfParks();
+		Park[] list = backend.findParks(); 
 		// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 		if (firstTimeParkMode) {
 			System.out.println("Welcome to Park Search Mode!");
+			//IM: changed up formatting of list of parks to fit the screen
+			int numSpaces = 35;
+			String spaces = "";
 			for (int i = 0; i < list.length; i++) {
-				System.out.print("" + (i+1) + " -- " + list[i].getName() + "\t");
+				if (i % 2 == 0) {
+					numSpaces = numSpaces - list[i].getName().length();
+					for (int x = 0; x < numSpaces; x++) {
+						spaces += " ";
+					}
+					System.out.print("" + (i+1) + " -- " + list[i].getName() + spaces);
+					numSpaces = 35;
+					spaces = "";
+				} else {
+					System.out.println("" + (i+1) + " -- " + list[i].getName());
+
+				}
 			}
 			// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 			System.out.println("\nAbove are all the National Parks in our database.");
@@ -101,8 +116,22 @@ public class Frontend {
 			// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 		}
 		else if (in.equalsIgnoreCase("n")) {
+			//IM: changed up formatting of list of parks to fit the screen
+			int numSpaces = 35;
+			String spaces = "";
 			for (int i = 0; i < list.length; i++) {
-				System.out.print("" + (i+1) + " -- " + list[i].getName() + "\t");
+				if (i % 2 == 0) {
+					numSpaces = numSpaces - list[i].getName().length();
+					for (int x = 0; x < numSpaces; x++) {
+						spaces += " ";
+					}
+					System.out.print("" + (i+1) + " -- " + list[i].getName() + spaces);
+					numSpaces = 35;
+					spaces = "";
+				} else {
+					System.out.println("" + (i+1) + " -- " + list[i].getName());
+
+				}
 			}
 			// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 			System.out.println("\nAbove are all the National Parks in our database.");
@@ -126,6 +155,7 @@ public class Frontend {
 					System.out.println("Park Name: " + list[i-1].getName());
 					System.out.println("State(s) park is in: " + list[i-1].getStates());
 					System.out.println("Brief Description: " + list[i-1].getDescription());
+					System.out.println();
 					parkMode();
 				} // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 			}
@@ -185,6 +215,7 @@ public class Frontend {
 					System.out.println((i+1) + " -- Park Name: " + savedRoutes[i].getName() + " National Park");
 					System.out.println("Located in: " + savedRoutes[i].getStates());
 					System.out.println("Brief Description: \n" + savedRoutes[i].getDescription() + "\n");
+					System.out.println();
 				}
 			}
 			displayOptions("keeper");
@@ -295,7 +326,7 @@ public class Frontend {
 		}
 		String in = null;
 		System.out.println("Here is a random suggestion for a park:");
-		Park park = backend.getRandom();
+		Park park = backend.randomPark();
 		// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 		System.out.println("1 -- Park Name: " + park.getName() + " National Park");
 		System.out.println("Located in: " + park.getStates());
@@ -320,13 +351,22 @@ public class Frontend {
 	}
 	
 	public void displayRoute(Park park) {
-		Park[] route = backend.returnPathTo(park);
+		CS400Graph.Path route = backend.returnPathTo(park);  // IM: changed Park[] to Path
+		//original - IM: changed for loop to iterate through dataSequence of Path
+//		// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//		System.out.println("\nHere is the route from Madison to your chosen park: \n");
+//		for (int j = 0; j < route.length; j++) {
+//			System.out.println("Park Name: " + route[j].getName());
+//			System.out.println("Brief Description: \n" + route[j].getDescription());
+//			System.out.println("State(s) park is in: " + route[j].getStates() + "\n");
+//		} // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+		
 		// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 		System.out.println("\nHere is the route from Madison to your chosen park: \n");
-		for (int j = 0; j < route.length; j++) {
-			System.out.println("Park Name: " + route[j].getName());
-			System.out.println("Brief Description: \n" + route[j].getDescription());
-			System.out.println("State(s) park is in: " + route[j].getStates() + "\n");
+		for (int j = 0; j < route.dataSequence.size(); j++) {
+			System.out.println("Park Name: " + ((Park) route.dataSequence.get(j)).getName());
+			System.out.println("Brief Description: \n" + ((Park) route.dataSequence.get(j)).getDescription());
+			System.out.println("State(s) park is in: " + (((Park) route.dataSequence.get(j)).getStates()) + "\n");
 		} // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 	}
 	
