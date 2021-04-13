@@ -1,3 +1,12 @@
+// --== CS400 File Header Information ==--
+// Name: Kayla Thrane
+// Email: krthrane@wisc.edu
+// Team: KB blue
+// Role: Frontend Developer
+// TA: Keren Chen
+// Lecturer: Gary Dahl
+// Notes to Grader: 
+
 import java.io.IOException;
 import java.util.zip.DataFormatException;
 
