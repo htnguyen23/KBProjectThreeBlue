@@ -1,3 +1,12 @@
+// --== CS400 File Header Information ==--
+// Name: Kayla Thrane
+// Email: krthrane@wisc.edu
+// Team: KB blue
+// Role: Frontend Developer
+// TA: Keren Chen
+// Lecturer: Gary Dahl
+// Notes to Grader: 
+
 import java.util.Scanner;
 
 //import CS400Graph.Path;
@@ -6,18 +15,23 @@ public class Frontend {
 	
 	// instance variables
 	private Backend backend;
-	private boolean firstTimeBaseMode = true;
-	private boolean firstTimeParkMode = true;
+	private boolean firstTimeBaseMode = true; 	// These four booleans mark first time in each mode so welcome
+	private boolean firstTimeParkMode = true;	//     message can go for each
 	private boolean firstTimeRouteKeeperMode = true;
 	private boolean firstTimeRandomMode = true;
 	private Scanner scanner = new Scanner(System.in);
-	private Park[] savedRoutes = new Park[3];
+	private Park[] savedRoutes = new Park[3];	// used in route keeper mode
 	
-	
+	/**
+	 * Constructor that sets a backend to use
+	 */
 	public Frontend(Backend back) {
 		this.backend = back;
 	}
 	
+	/**
+	 * Main screen in program -- can access other modes from here
+	 */
 	public void baseMode() {
 		String in = "";
 		if (firstTimeBaseMode) {
@@ -54,7 +68,7 @@ public class Frontend {
 		else if (in.equalsIgnoreCase("r")) {
 			randomMode();
 		}
-		else if (in.equalsIgnoreCase("x")) {
+		else if (in.equalsIgnoreCase("x")) {	// exit program
 			System.out.println("Thank you for using The Golden Eagle Path! Goodbye and have fun on your adventure!!!");
 			System.out.println("                     _________________                                                                                      __________");
 			System.out.println("                    /__  ____________/\\                                                                                  __\\          /__");
@@ -77,13 +91,14 @@ public class Frontend {
 		
 	}
 	
-	
+	/**
+	 * Mode that shows list of all parks to user. From here user can add a park to saved routes
+	 * and get more info on each park
+	 */
 	public void parkMode() {
 		String in = "";
-		// CHANGE TO METHOD FROM BACKEND
 		Park[] list = backend.findParks(); 
-		// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-		if (firstTimeParkMode) {
+		if (firstTimeParkMode) {	// display all parks
 			System.out.println("Welcome to Park Search Mode!");
 			//IM: changed up formatting of list of parks to fit the screen
 			int numSpaces = 35;
@@ -102,7 +117,6 @@ public class Frontend {
 
 				}
 			}
-			// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 			System.out.println("\nAbove are all the National Parks in our database.");
 			firstTimeParkMode = false;
 		}
@@ -113,7 +127,6 @@ public class Frontend {
 		}
 		else if (in.equalsIgnoreCase("a")) {
 			addPark(list);
-			// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 		}
 		else if (in.equalsIgnoreCase("n")) {
 			//IM: changed up formatting of list of parks to fit the screen
@@ -133,11 +146,10 @@ public class Frontend {
 
 				}
 			}
-			// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 			System.out.println("\nAbove are all the National Parks in our database.");
 			parkMode();
 		}
-		else if (in.equalsIgnoreCase("i")) {
+		else if (in.equalsIgnoreCase("i")) {	// get info: route
 			System.out.println("Enter the index that appears before the park name.");
 			in = scanner.nextLine();
 			for (int i = 1; i <= list.length; i++) {
@@ -145,7 +157,7 @@ public class Frontend {
 					displayRoute(list[i-1]);
 					parkMode();
 				}
-			} // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+			}
 			System.out.println("Please enter valid input.");
 			parkMode();
 		}
@@ -157,7 +169,7 @@ public class Frontend {
 					System.out.println("Brief Description: " + list[i-1].getDescription());
 					System.out.println();
 					parkMode();
-				} // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+				}
 			}
 			System.out.println("Please enter valid input.");
 			parkMode();
@@ -165,8 +177,10 @@ public class Frontend {
 		
 	}
 
+	/**
+	 * Mode that adds a park to the route keeper
+	 */
 	public void addPark(Park[] parks) {
-		// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 		if (savedRoutes[2] != null) {
 			System.out.println("Your Route Keeper is full. Please go to Route Keeper Mode and delete a route before trying to add another route.");
 			parkMode();
@@ -183,17 +197,20 @@ public class Frontend {
 					}
 				}
 			}
-		} // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+		}
 		System.out.println("Please enter a valid index.");
 		addPark(parks);
 	}
 	
+	/**
+	 * Mode where the user can veiew and edit their saved routes
+	 */
 	public void routeKeeperMode() {
 		String in = "";
 		if (firstTimeRouteKeeperMode) {
 			System.out.println("Welcome to Route Keeper Mode! Here you can view and edit the routes you have previously saved.");
 			firstTimeRouteKeeperMode = false;
-		}
+		}	// nothing added to route keeper
 		if (savedRoutes[0] == null) {
 			displayOptions("emptyKeeper");
 			in = scanner.nextLine();
@@ -208,7 +225,7 @@ public class Frontend {
 				routeKeeperMode();
 			}
 		}
-		else {
+		else {	// at least one route in route keeper
 			System.out.println("Here are your saved Routes: \n");
 			for (int i = 0; i < savedRoutes.length; i++) {
 				if (savedRoutes[i] != null) {
@@ -220,7 +237,7 @@ public class Frontend {
 			}
 			displayOptions("keeper");
 			in = scanner.nextLine();
-			if (in.equalsIgnoreCase("r")) {
+			if (in.equalsIgnoreCase("r")) {	// remove route
 				int temp = 0;
 				System.out.println("Enter the index that appears before the park name that would like to remove.");
 				in = scanner.nextLine();
@@ -251,7 +268,7 @@ public class Frontend {
 					routeKeeperMode();
 				}
 			}
-			else if (in.equalsIgnoreCase("t")) {
+			else if (in.equalsIgnoreCase("t")) {	// "choose" a route to go with, exits program
 				int temp = 0;
 				System.out.println("Enter the index that appears before the park name.");
 				in = scanner.nextLine();
@@ -319,6 +336,10 @@ public class Frontend {
 		}
 	}
 	
+	/**
+	 * Mode where the user can get a random suggestion for a park.
+	 * User can add this to saved routes or get more suggestions
+	 */
 	public void randomMode() {
 		if (firstTimeRandomMode) {
 			System.out.println("Welcome to Random Mode! Each time you come to this mode, you will receive a new suggestion.");
@@ -327,14 +348,13 @@ public class Frontend {
 		String in = null;
 		System.out.println("Here is a random suggestion for a park:");
 		Park park = backend.randomPark();
-		// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 		System.out.println("1 -- Park Name: " + park.getName() + " National Park");
 		System.out.println("Located in: " + park.getStates());
 		System.out.println("Brief Description: \n" + park.getDescription());
 		displayRoute(park);
 		displayOptions("random");
 		in = scanner.nextLine();
-		if (in.equals("r")) {
+		if (in.equals("r")) {	// get new suggestion
 			randomMode();
 		}
 		else if (in.equals("a")) {
@@ -350,26 +370,29 @@ public class Frontend {
 		}
 	}
 	
+	/**
+	 * Prints out the route of the park the user has chosen to look at 
+	 */
 	public void displayRoute(Park park) {
 		CS400Graph.Path route = backend.returnPathTo(park);  // IM: changed Park[] to Path
 		//original - IM: changed for loop to iterate through dataSequence of Path
-//		// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 //		System.out.println("\nHere is the route from Madison to your chosen park: \n");
 //		for (int j = 0; j < route.length; j++) {
 //			System.out.println("Park Name: " + route[j].getName());
 //			System.out.println("Brief Description: \n" + route[j].getDescription());
 //			System.out.println("State(s) park is in: " + route[j].getStates() + "\n");
-//		} // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-		
-		// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//		}
 		System.out.println("\nHere is the route from Madison to your chosen park: \n");
 		for (int j = 0; j < route.dataSequence.size(); j++) {
 			System.out.println("Park Name: " + ((Park) route.dataSequence.get(j)).getName());
 			System.out.println("Brief Description: \n" + ((Park) route.dataSequence.get(j)).getDescription());
 			System.out.println("State(s) park is in: " + (((Park) route.dataSequence.get(j)).getStates()) + "\n");
-		} // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+		} 
 	}
 	
+	/**
+	 * Messages to be displayed from within modes
+	 */
 	private void displayOptions(String mode) {
 		if (mode.equals("base")) {
 			System.out.println("If you would like to search for a National Park, press 'p'.");
