@@ -19,7 +19,7 @@ public class Backend implements BackendInterface {
 	private ParkDataReader reader;
 	private FileReader filereader;
 	private FileReader filereader2;
-	private LinkedList<Park> parkList;
+	private Park[] parkList;
 	private ArrayList<String> tableKeys;
 	private CS400Graph<Park> graph;
 	private Hashtable<String, Park> table;
@@ -67,7 +67,7 @@ public class Backend implements BackendInterface {
 		}
 		tableKeys = new ArrayList<String>(table.keySet());
 		madison = table.get("Madison (City)");
-
+		parkList = findParks();
 	}
 
 	/**
@@ -105,9 +105,9 @@ public class Backend implements BackendInterface {
 	 */
 	public boolean doesParkExist(String searchQuery) 
 	{
-		for (int i = 0; i < parkList.size(); i++) 
+		for (int i = 0; i < parkList.length; i++) 
 		{
-			if (parkList.get(i).getName().equals(searchQuery)) 
+			if (parkList[i].getName().equals(searchQuery)) 
 			{
 				return true;
 			}
