@@ -19,7 +19,7 @@ import java.util.zip.DataFormatException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class DataWranglerTests {
+public class DataWranglerTests {
 	private ParkDataReader readerToTest;
 	private Hashtable<String, Park> testPark;
 	private CS400Graph<Park> testGraph;
