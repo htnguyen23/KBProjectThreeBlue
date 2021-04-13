@@ -69,12 +69,14 @@ public class DataWranglerTests {
 	 */
 	@Test
 	public void testNoPathReturnToMadison(){
+		boolean isThrown = false;
 		try {
 			testGraph.dijkstrasShortestPath(testPark.get("Hot Springs"),testPark.get("Madison (City)"));
 		}catch (NoSuchElementException e) {
-			assertEquals(e.getMessage(),"no path from start to end can be found");
+			isThrown = true;
+//			assertEquals(e.getMessage(),"no path from start to end can be found");
 		}
-		
+		assertEquals(isThrown, true);
 		
 	}
 	
